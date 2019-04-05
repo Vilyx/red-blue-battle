@@ -1044,7 +1044,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &608850453
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1209,9 +1209,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameController: {fileID: 1200906372}
   winrateUI: {fileID: 56080531}
-  endgamePanel: {fileID: 0}
-  durationText: {fileID: 0}
-  endgameWinner: {fileID: 0}
+  endgamePanel: {fileID: 608850452}
+  durationText: {fileID: 222076341}
+  endgameWinner: {fileID: 1435684155}
 --- !u!1 &634738308
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,10 +1822,10 @@ RectTransform:
   m_Father: {fileID: 1435684151}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 30, y: -20}
+  m_SizeDelta: {x: 20, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1044670291
 MonoBehaviour:
@@ -2339,10 +2339,10 @@ RectTransform:
   m_Father: {fileID: 1435684151}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 10, y: -20}
+  m_SizeDelta: {x: 20, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1467790385
 MonoBehaviour:
