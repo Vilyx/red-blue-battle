@@ -17,12 +17,12 @@ public class CameraPlacer : MonoBehaviour {
 
 		if (screenRatio >= targetRatio)
 		{
-			Camera.main.orthographicSize = targetBounds.size.z / 2 * margin;
+			camera.orthographicSize = targetBounds.size.z / 2 * margin;
 		}
 		else
 		{
 			float differenceInSize = targetRatio / screenRatio;
-			Camera.main.orthographicSize = targetBounds.size.z / 2 * differenceInSize * margin;
+			camera.orthographicSize = targetBounds.size.z / 2 * differenceInSize * margin;
 		}
 
 		transform.position = new Vector3(targetBounds.center.x, 1f, targetBounds.center.z);
