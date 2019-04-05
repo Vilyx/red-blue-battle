@@ -31,6 +31,11 @@ public class GameController : MonoBehaviour
 		CollisionSystem.CheckCollisions(characters, gameAreaBounds);
 	}
 
+	private void Update()
+	{
+		SimulationDuration += Time.deltaTime;
+	}
+
 	/// <summary>
 	/// Полный перезапуск игры
 	/// </summary>
