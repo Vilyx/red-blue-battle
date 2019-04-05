@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class GameConfig {
+public struct GameConfig {
 
 	public int gameAreaWidth;
 	public int gameAreaHeight;

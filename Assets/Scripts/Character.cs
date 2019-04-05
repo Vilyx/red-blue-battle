@@ -2,7 +2,7 @@
 
 public class Character : MonoBehaviour
 {
-	public System.Action<Character, Character> deadlyCollision;
+	public event System.Action<Character, Character> deadlyCollision;
 
 	private float angle;
 	private float scale;
@@ -82,6 +82,11 @@ public class Character : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Реакция на коллизию, отскакиваем от своих и от стены, уменьшаемся от врага
+	/// </summary>
+	/// <param name="other">С кем столкнулись, null - стена</param>
+	/// <param name="collisionPoint">Точка соприкосновения</param>
 	public void OnMyCollision(Character other, Vector3 collisionPoint)
 	{
 		if (other == null || other.Team == this.Team)
@@ -94,9 +99,16 @@ public class Character : MonoBehaviour
 		}
 	}
 
-	private float GetAngle(Vector3 first, Vector3 second)
+
+	/// <summary>
+	/// Угол поворота по оси Y, который будет после отражения вектора направления движения
+	/// </summary>
+	/// <param name="collisionPoint">Точка соприкосновения круга с другим объектом</param>
+	/// <param name="objectPosition">Координаты центра круга</param>
+	/// <returns></returns>
+	private float GetAngle(Vector3 collisionPoint, Vector3 objectPosition)
 	{
-		Vector3 from = first - second;
+		Vector3 from = collisionPoint - objectPosition;
 		Vector3 to = Vector3.Reflect(transform.forward, from.normalized);
 		if (Vector3.Dot(from, transform.forward) > 0)
 			return Quaternion.FromToRotation(Vector3.forward, to).eulerAngles.y;

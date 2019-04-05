@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-	public Action<int, int> balanceChanged;
+	public event Action<int, int> balanceChanged;
 
 	[SerializeField]
 	private GameObject spawnerPrefab;
@@ -13,20 +13,13 @@ public class GameController : MonoBehaviour
 	[SerializeField]
 	private SpriteRenderer gameAreaBackground;
 	private List<Character> characters = new List<Character>();
-	private Spawner spawner;
+	private ISpawner spawner;
 	private GameConfig config;
 	private Bounds gameAreaBounds;
-	private float simulationDuration;
 	private string configFilename = "data.txt";
 	private string saveFilename = "gamesave.txt";
 
-	public float SimulationDuration
-	{
-		get
-		{
-			return simulationDuration;
-		}
-	}
+	public float SimulationDuration { get; private set; }
 
 	private void Start ()
 	{
@@ -38,6 +31,9 @@ public class GameController : MonoBehaviour
 		CollisionSystem.CheckCollisions(characters, gameAreaBounds);
 	}
 
+	/// <summary>
+	/// Полный перезапуск игры
+	/// </summary>
 	public void RestartGame()
 	{
 		WipeGame();
@@ -47,10 +43,14 @@ public class GameController : MonoBehaviour
 		UpdateCameraPlacement();
 	}
 
+
+	/// <summary>
+	/// Сохранение игры
+	/// </summary>
 	public void SaveGame()
 	{
 		GameSavePD gameSave = new GameSavePD();
-		gameSave.simulationDuration = simulationDuration;
+		gameSave.simulationDuration = SimulationDuration;
 		gameSave.spawner = new SpawnerDTO();
 		gameSave.spawner.unitsToSpawn = spawner.UnitsToSpawn;
 
@@ -69,6 +69,10 @@ public class GameController : MonoBehaviour
 		gameSave.Save(saveFilename);
 	}
 
+
+	/// <summary>
+	/// Загрузка игры
+	/// </summary>
 	public void LoadGame()
 	{
 		GameSavePD gameSave = new GameSavePD();
@@ -81,12 +85,16 @@ public class GameController : MonoBehaviour
 			spawner.Spawn(dTO.team,dTO.scale,dTO.angle,dTO.speed,dTO.position);
 		}
 		spawner.UnitsToSpawn = gameSave.spawner.unitsToSpawn;
-		simulationDuration = gameSave.simulationDuration;
+		SimulationDuration = gameSave.simulationDuration;
 	}
 
+
+	/// <summary>
+	/// Стирает существующих персонажей и спавнера
+	/// </summary>
 	private void WipeGame()
 	{
-		simulationDuration = 0;
+		SimulationDuration = 0;
 		if (spawner != null)
 			Destroy(spawner.gameObject);
 		for (int i = 0; i < characters.Count; i++)
@@ -96,6 +104,10 @@ public class GameController : MonoBehaviour
 		characters = new List<Character>();
 	}
 
+
+	/// <summary>
+	/// Инициализирует gameAreaBounds данными из конфига и выставляет нужный размер фону
+	/// </summary>
 	private void InitGameAreaBounds()
 	{
 		gameAreaBounds = new Bounds();
@@ -103,6 +115,10 @@ public class GameController : MonoBehaviour
 		gameAreaBackground.size = new Vector2(config.gameAreaWidth, config.gameAreaHeight);
 	}
 
+
+	/// <summary>
+	/// Загружает конфиг
+	/// </summary>
 	private void LoadConfig()
 	{
 		ConfigWrapperPD configWrapperPD = new ConfigWrapperPD();
@@ -110,9 +126,13 @@ public class GameController : MonoBehaviour
 		config = configWrapperPD.GameConfig;
 	}
 
+
+	/// <summary>
+	/// Инициализация спавнера и подписка на его события
+	/// </summary>
 	private void InitSpawner()
 	{
-		spawner = Instantiate(spawnerPrefab).GetComponent<Spawner>();
+		spawner = Instantiate(spawnerPrefab).GetComponent<ISpawner>();
 		spawner.GameAreaWidth = config.gameAreaWidth;
 		spawner.GameAreaHeight = config.gameAreaHeight;
 		spawner.MinUnitRadius = config.minUnitRadius;
@@ -126,6 +146,10 @@ public class GameController : MonoBehaviour
 		spawner.spawningFinished += OnSpawnFinish;
 	}
 
+
+	/// <summary>
+	/// Отдаляет камеру для охвата всего поля симуляции
+	/// </summary>
 	private void UpdateCameraPlacement()
 	{
 		Bounds bounds = new Bounds();
@@ -133,6 +157,11 @@ public class GameController : MonoBehaviour
 		cameraPlacer.ScaleCamera(bounds);
 	}
 
+
+	/// <summary>
+	/// Останавливает вновь созданного персонажа и подписывается на его смерть
+	/// </summary>
+	/// <param name="character">вновь созданный персонаж</param>
 	private void OnCharacterSpawn(Character character)
 	{
 		character.Freezed = true;
@@ -140,6 +169,11 @@ public class GameController : MonoBehaviour
 		characters.Add(character);
 	}
 
+
+	/// <summary>
+	/// Все персонажи заспавнены, теперь надо разрешить им двигаться
+	/// и обновить индикатор баланса сил
+	/// </summary>
 	private void OnSpawnFinish()
 	{
 		for (int i = 0; i < characters.Count; i++)
@@ -149,6 +183,12 @@ public class GameController : MonoBehaviour
 		UpdateWinrateUI();
 	}
 
+
+	/// <summary>
+	/// Кто-то умер от столкновения
+	/// </summary>
+	/// <param name="character1">Один из столкнувшихся</param>
+	/// <param name="character2">Второй столкнувшийся</param>
 	private void OnDeadlyCollision(Character character1, Character character2)
 	{
 		if (character1 != null && characters.IndexOf(character1) != -1)
@@ -164,6 +204,10 @@ public class GameController : MonoBehaviour
 		UpdateWinrateUI();
 	}
 
+
+	/// <summary>
+	/// Обновить индикатор баланса сил
+	/// </summary>
 	private void UpdateWinrateUI()
 	{
 		int redCount = 0;

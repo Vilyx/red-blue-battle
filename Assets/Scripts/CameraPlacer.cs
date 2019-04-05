@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 
 public class CameraPlacer : MonoBehaviour {
+
+
+	/// <summary>
+	/// Насколько больше будет Bounds при вычислении размера камеры
+	/// </summary>
 	[SerializeField]
 	private float margin = 1;
 	private new Camera camera;
@@ -10,6 +15,11 @@ public class CameraPlacer : MonoBehaviour {
 		camera = GetComponent<Camera>();
 	}
 
+
+	/// <summary>
+	/// Установить размер камеры таким чтобы Bounds поместился целиком
+	/// </summary>
+	/// <param name="targetBounds"></param>
 	public void ScaleCamera(Bounds targetBounds)
 	{
 		float screenRatio = (float)Screen.width / (float)Screen.height;
