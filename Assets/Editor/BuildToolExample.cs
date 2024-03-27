@@ -12,20 +12,10 @@ public class BuildToolExample : MonoBehaviour
         // https://docs.unity3d.com/ScriptReference/BuildPipeline.BuildPlayer.html
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         buildPlayerOptions.scenes = new[] { "Assets/Scenes/Main.unity"};
-        var buildPath = Application.dataPath + "/../Builds/mygame.exe";
+        var buildPath = "./Builds/Game.exe";
         buildPlayerOptions.locationPathName = buildPath;
         buildPlayerOptions.target = BuildTarget.StandaloneWindows64;
         buildPlayerOptions.options = BuildOptions.None;
-
-        if (!File.Exists(buildPath))
-        {
-            File.Delete(buildPath);
-        }
-
-        if (Directory.Exists(buildPath))
-        {
-            Directory.Delete(buildPath, true);
-        }
 
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
